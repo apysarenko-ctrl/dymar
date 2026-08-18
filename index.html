@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Димар — в'ялене м'ясо ручної роботи</title>
+<!--
+  НАВЧАЛЬНИЙ МАКЕТ для заняття 2.1 «Гіпотези та A/B тестування» (Digital Marketing + AI).
+  Бренд «Димар» вигаданий, компанії з такою назвою не існує, відгуки й цифри — навчальні.
+  Сторінка навмисно містить типові поломки конверсії. Не публікувати як реальний магазин.
+-->
+<style>
+  :root{
+    --ink:#241a12;
+    --paper:#fffdf8;
+    --band:#f6efe4;
+    --brand:#8a3b12;
+    --accent:#c2410c;
+    --muted:#8a7a6b;
+    --line:#e7dccc;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{line-height:1.2;margin:0 0 .5em}
+  h1{font-size:clamp(32px,5vw,54px);letter-spacing:-.02em}
+  h2{font-size:clamp(24px,3.2vw,34px);letter-spacing:-.01em}
+  p{margin:0 0 1em}
+  a{color:var(--brand)}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+  .section{padding:72px 0}
+  .section--band{background:var(--band)}
+
+  /* ── шапка ─────────────────────────────── */
+  header{
+    position:sticky;top:0;z-index:40;
+    background:rgba(255,253,248,.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;gap:28px;height:68px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.02em;font-size:19px}
+  .logo span{color:var(--brand)}
+  .nav ul{display:flex;gap:22px;list-style:none;margin:0;padding:0;font-size:15px}
+  .nav a{color:var(--ink);text-decoration:none;opacity:.8}
+  .nav a:hover{opacity:1;color:var(--brand)}
+  .nav .phone{margin-left:auto;font-weight:600;white-space:nowrap}
+
+  /* ── перший екран ──────────────────────── */
+  .hero{
+    position:relative;
+    min-height:78vh;
+    display:flex;align-items:center;
+    background:
+      radial-gradient(900px 420px at 78% 18%, rgba(194,65,12,.16), transparent 60%),
+      linear-gradient(160deg,#fbf4ea 0%,#f2e5d2 100%);
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+  }
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;width:100%}
+  .kicker{
+    display:inline-block;margin-bottom:18px;
+    font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--brand);font-weight:700;
+  }
+  .hero p.lead{font-size:19px;color:#4d3f33;max-width:46ch}
+  .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+  .btn{
+    display:inline-block;padding:14px 24px;border-radius:999px;
+    font-weight:650;font-size:15px;text-decoration:none;cursor:pointer;border:1px solid transparent;
+  }
+  .btn--primary{background:var(--accent);color:#fff}
+  .btn--primary:hover{background:#a8360a}
+  .btn--ghost{background:transparent;color:var(--brand);border-color:var(--brand)}
+  .btn--soft{background:#fff;color:var(--ink);border-color:var(--line)}
+  .hero-art{display:flex;justify-content:center}
+
+  /* ── картки ────────────────────────────── */
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;display:flex;flex-direction:column;gap:8px;
+  }
+  .card h3{margin:0;font-size:19px}
+  .card .desc{color:var(--muted);font-size:15px;flex:1}
+  .card .btn{align-self:flex-start;margin-top:10px}
+  .pack{width:100%;height:150px;border-radius:10px;overflow:hidden;background:#f3ece2}
+
+  /* ── кроки ─────────────────────────────── */
+  .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;counter-reset:s}
+  .step{position:relative;padding-top:44px;font-size:15px;color:#4d3f33}
+  .step:before{
+    counter-increment:s;content:counter(s);
+    position:absolute;top:0;left:0;width:32px;height:32px;border-radius:50%;
+    background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700;font-size:15px;
+  }
+
+  /* ── форма ─────────────────────────────── */
+  .form-box{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    padding:32px;max-width:820px;margin:0 auto;
+  }
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+  input,select,textarea{
+    width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;
+    font:inherit;font-size:15px;background:#fffdfa;color:var(--ink);
+  }
+  input:focus,select:focus,textarea:focus{outline:2px solid rgba(194,65,12,.35);border-color:var(--accent)}
+  .full{grid-column:1/-1}
+  .req{color:var(--accent)}
+  .check{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:#4d3f33}
+  .check input{width:auto;margin-top:3px}
+  .fineprint{font-size:12px;color:#b3a596;margin-top:14px}
+
+  /* ── прайс, відгуки, FAQ ───────────────── */
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  th,td{padding:13px 16px;text-align:left;border-bottom:1px solid var(--line);font-size:15px}
+  th{background:var(--band);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  tr:last-child td{border-bottom:none}
+  .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .quote{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;font-size:15px}
+  .quote .who{margin-top:10px;color:var(--muted);font-size:13px}
+  .stars{color:#d9860a;letter-spacing:2px}
+  details{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:10px}
+  summary{cursor:pointer;font-weight:600}
+  details p{margin:10px 0 0;color:#4d3f33;font-size:15px}
+
+  /* ── підвал ────────────────────────────── */
+  footer{background:#241a12;color:#d9cdbf;padding:52px 0 34px;font-size:14px}
+  footer a{color:#f0c9a8}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px}
+  .foot-grid h4{color:#fff;font-size:15px;margin:0 0 12px}
+  .foot-grid ul{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+
+  /* ── попап ─────────────────────────────── */
+  .modal{
+    position:fixed;inset:0;z-index:60;display:none;
+    background:rgba(36,26,18,.55);align-items:center;justify-content:center;padding:20px;
+  }
+  .modal.open{display:flex}
+  .modal-box{
+    background:#fff;border-radius:16px;padding:38px 34px;max-width:440px;width:100%;
+    text-align:center;position:relative;box-shadow:0 24px 60px rgba(0,0,0,.28);
+  }
+  .modal-box h3{font-size:26px}
+  .modal-close{
+    position:absolute;top:10px;right:12px;background:none;border:none;
+    font-size:15px;color:#cbbdae;cursor:pointer;line-height:1;padding:4px;
+  }
+
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr;gap:28px}
+    .hero-art{order:-1}
+    .grid-3,.quotes{grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr 1fr}
+    .form-grid{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr}
+    .nav ul{display:none}
+    .section{padding:52px 0}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo">🔥 ДИМАР<span>.</span></div>
+    <ul>
+      <li><a href="#about">Про нас</a></li>
+      <li><a href="#product">Продукція</a></li>
+      <li><a href="#how">Як замовити</a></li>
+      <li><a href="#delivery">Доставка</a></li>
+      <li><a href="#contacts">Контакти</a></li>
+    </ul>
+    <div class="phone">+38 (0XX) XXX-XX-XX</div>
+  </div>
+</header>
+
+<!-- Перший екран -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="kicker">Родинна майстерня з 2019 року</span>
+      <h1>Якість, перевірена традицією</h1>
+      <p class="lead">
+        Ми з любов'ю ставимося до кожного етапу виробництва та обираємо тільки найкраще.
+        Наш продукт — це поєднання сучасних технологій і рецептів, які передавалися поколіннями.
+        Спробуйте — і ви відчуєте різницю.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn--ghost" href="#about">Дізнатися більше</a>
+        <a class="btn btn--primary" href="#order">Замовити зараз</a>
+        <a class="btn btn--soft" href="#contacts">Написати в Direct</a>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg width="330" height="330" viewBox="0 0 330 330" role="img" aria-label="Пачка в'яленого м'яса">
+        <defs>
+          <linearGradient id="pouch" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#4a2d1b"/><stop offset="1" stop-color="#2c1a0f"/>
+          </linearGradient>
+          <linearGradient id="meat" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#8f4522"/><stop offset="1" stop-color="#5d2a13"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="165" cy="300" rx="112" ry="16" fill="#000" opacity=".10"/>
+        <rect x="70" y="52" width="190" height="240" rx="16" fill="url(#pouch)"/>
+        <rect x="70" y="52" width="190" height="26" rx="10" fill="#1d110a"/>
+        <rect x="92" y="104" width="146" height="92" rx="8" fill="#f6efe4" opacity=".95"/>
+        <text x="165" y="140" text-anchor="middle" font-family="Helvetica,Arial" font-size="21" font-weight="700" fill="#3b2314">ДИМАР</text>
+        <text x="165" y="166" text-anchor="middle" font-family="Helvetica,Arial" font-size="12" letter-spacing="2" fill="#8a7a6b">BEEF JERKY</text>
+        <text x="165" y="186" text-anchor="middle" font-family="Helvetica,Arial" font-size="11" fill="#b3a596">класичний</text>
+        <g opacity=".95">
+          <rect x="104" y="214" width="122" height="13" rx="6" fill="url(#meat)"/>
+          <rect x="112" y="234" width="106" height="13" rx="6" fill="url(#meat)"/>
+          <rect x="120" y="254" width="90" height="13" rx="6" fill="url(#meat)"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- Про нас -->
+<section class="section" id="about">
+  <div class="wrap" style="max-width:760px">
+    <h2>Наша історія</h2>
+    <p>
+      Усе почалося з невеликої сушарки на кухні у Львові. Засновник майстерні Андрій довго шукав
+      м'ясні снеки, які б відповідали його уявленню про справжній смак, і зрештою вирішив робити їх сам.
+      Перші партії розходилися серед друзів, потім — серед друзів друзів.
+    </p>
+    <p>
+      Сьогодні «Димар» — це невелика команда однодумців, яка щотижня випускає обмежену кількість продукту.
+      Ми не женемося за обсягами: для нас важливіше зберегти той самий підхід, з якого все починалося.
+      Кожна партія проходить контроль на всіх етапах — від вибору сировини до пакування.
+    </p>
+    <p>
+      Ми віримо, що чесний продукт не потребує гучних слів. Тому просто робимо свою справу — і раді,
+      коли ви до нас повертаєтесь.
+    </p>
+  </div>
+</section>
+
+<!-- Продукція -->
+<section class="section section--band" id="product">
+  <div class="wrap">
+    <h2>Наша продукція</h2>
+    <p style="color:var(--muted);max-width:60ch">Три смаки, які ми випускаємо постійно. Сезонні позиції з'являються в нашому Instagram.</p>
+    <div class="grid-3" style="margin-top:28px">
+      <div class="card">
+        <div class="pack">
+          <svg viewBox="0 0 200 150" width="100%" height="100%"><rect width="200" height="150" fill="#efe6d9"/><rect x="62" y="22" width="76" height="106" rx="9" fill="#3a2214"/><rect x="72" y="52" width="56" height="40" rx="5" fill="#f6efe4"/><text x="100" y="78" text-anchor="middle" font-family="Helvetica" font-size="11" font-weight="700" fill="#3b2314">КЛАСИК</text></svg>
+        </div>
+        <h3>Класичний</h3>
+        <div class="desc">Яловичина, сіль, суміш перців. Той самий смак, з якого все починалося.</div>
+        <a class="btn btn--ghost" href="#order">Дізнатися ціну</a>
+      </div>
+      <div class="card">
+        <div class="pack">
+          <svg viewBox="0 0 200 150" width="100%" height="100%"><rect width="200" height="150" fill="#efe6d9"/><rect x="62" y="22" width="76" height="106" rx="9" fill="#5a1f12"/><rect x="72" y="52" width="56" height="40" rx="5" fill="#f6efe4"/><text x="100" y="78" text-anchor="middle" font-family="Helvetica" font-size="11" font-weight="700" fill="#5a1f12">ГОСТРИЙ</text></svg>
+        </div>
+        <h3>Гострий</h3>
+        <div class="desc">Для тих, хто любить відчутніше. Чилі та паприка, помірна гострота.</div>
+        <a class="btn btn--ghost" href="#order">Дізнатися ціну</a>
+      </div>
+      <div class="card">
+        <div class="pack">
+          <svg viewBox="0 0 200 150" width="100%" height="100%"><rect width="200" height="150" fill="#efe6d9"/><rect x="62" y="22" width="76" height="106" rx="9" fill="#4a3a16"/><rect x="72" y="52" width="56" height="40" rx="5" fill="#f6efe4"/><text x="100" y="78" text-anchor="middle" font-family="Helvetica" font-size="11" font-weight="700" fill="#4a3a16">МЕД-ГІРЧ</text></svg>
+        </div>
+        <h3>Мед-гірчиця</h3>
+        <div class="desc">М'якший профіль зі солодкуватою ноткою. Наш бестселер серед новачків.</div>
+        <a class="btn btn--ghost" href="#order">Дізнатися ціну</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Як замовити -->
+<section class="section" id="how">
+  <div class="wrap">
+    <h2>Як замовити</h2>
+    <div class="steps" style="margin-top:28px">
+      <div class="step">Заповніть форму заявки на сайті</div>
+      <div class="step">Менеджер зв'яжеться з вами протягом 24 годин у робочі дні</div>
+      <div class="step">Узгодимо смаки, кількість і вартість доставки</div>
+      <div class="step">Надішлемо реквізити для оплати</div>
+      <div class="step">Відправимо замовлення після зарахування коштів</div>
+    </div>
+  </div>
+</section>
+
+<!-- Форма -->
+<section class="section section--band" id="order">
+  <div class="wrap">
+    <h2 style="text-align:center">Залишити заявку</h2>
+    <p style="text-align:center;color:var(--muted);margin-bottom:28px">Заповніть анкету, і наш менеджер зв'яжеться з вами для уточнення деталей.</p>
+    <form class="form-box" onsubmit="event.preventDefault();alert('Це навчальний макет — заявка нікуди не відправляється.');">
+      <div class="form-grid">
+        <div><label>Прізвище <span class="req">*</span></label><input type="text" required></div>
+        <div><label>Ім'я <span class="req">*</span></label><input type="text" required></div>
+        <div><label>По батькові <span class="req">*</span></label><input type="text" required></div>
+        <div><label>Телефон <span class="req">*</span></label><input type="tel" placeholder="+38 (0__) ___-__-__" required></div>
+        <div><label>E-mail <span class="req">*</span></label><input type="email" required></div>
+        <div><label>Дата народження <span class="req">*</span></label><input type="date" required></div>
+        <div><label>Місто <span class="req">*</span></label><input type="text" required></div>
+        <div><label>Відділення Нової пошти <span class="req">*</span></label><input type="text" required></div>
+        <div class="full">
+          <label>Звідки ви про нас дізналися? <span class="req">*</span></label>
+          <select required>
+            <option value="">Оберіть варіант</option>
+            <option>Instagram</option><option>Google</option><option>Порада друзів</option><option>Інше</option>
+          </select>
+        </div>
+        <div class="full"><label>Коментар до замовлення</label><textarea rows="3"></textarea></div>
+        <div class="full check">
+          <input type="checkbox" checked>
+          <span>Погоджуюсь отримувати новини, акційні пропозиції та повідомлення від бренду «Димар» на e-mail і в месенджери</span>
+        </div>
+        <div class="full check">
+          <input type="checkbox" required>
+          <span>Я прочитав(ла) та приймаю умови обробки персональних даних і публічної оферти <span class="req">*</span></span>
+        </div>
+      </div>
+      <div style="margin-top:22px;text-align:center">
+        <button class="btn btn--primary" type="submit">Надіслати заявку</button>
+      </div>
+      <p class="fineprint">
+        Мінімальна сума замовлення — 1000 грн. Оплата — 100% передоплата на банківський рахунок.
+        Вартість доставки розраховується індивідуально та не входить у вартість замовлення.
+        Замовлення обробляються з понеділка по п'ятницю.
+      </p>
+    </form>
+  </div>
+</section>
+
+<!-- Прайс -->
+<section class="section" id="price">
+  <div class="wrap" style="max-width:760px">
+    <h2>Вартість</h2>
+    <table>
+      <tr><th>Позиція</th><th>Фасування</th><th>Ціна</th></tr>
+      <tr><td>Класичний</td><td>50 г</td><td>189 грн</td></tr>
+      <tr><td>Гострий</td><td>50 г</td><td>199 грн</td></tr>
+      <tr><td>Мед-гірчиця</td><td>50 г</td><td>199 грн</td></tr>
+      <tr><td>Набір «Три смаки»</td><td>3 × 50 г</td><td>549 грн</td></tr>
+    </table>
+    <p style="color:var(--muted);font-size:14px;margin-top:14px">Ціни вказані без урахування доставки. Актуальність уточнюйте у менеджера.</p>
+  </div>
+</section>
+
+<!-- Доставка -->
+<section class="section section--band" id="delivery">
+  <div class="wrap" style="max-width:760px">
+    <h2>Доставка та оплата</h2>
+    <details><summary>Скільки коштує доставка?</summary><p>Доставка здійснюється Новою поштою за тарифами перевізника. Точну вартість повідомить менеджер під час підтвердження замовлення.</p></details>
+    <details><summary>Коли я отримаю замовлення?</summary><p>Відправляємо протягом 1–3 робочих днів після зарахування коштів. Термін доставки залежить від регіону.</p></details>
+    <details><summary>Як можна оплатити?</summary><p>Наразі приймаємо тільки повну передоплату на банківський рахунок. Накладений платіж не використовуємо.</p></details>
+    <details><summary>Чи можна повернути товар?</summary><p>Харчові продукти належної якості поверненню та обміну не підлягають згідно з чинним законодавством. Якщо з замовленням щось не так — напишіть нам, розберемося індивідуально.</p></details>
+    <details><summary>Який термін придатності?</summary><p>6 місяців у закритій упаковці, 5 днів після відкриття.</p></details>
+  </div>
+</section>
+
+<!-- Відгуки -->
+<section class="section" id="reviews">
+  <div class="wrap">
+    <h2>Що кажуть покупці</h2>
+    <div class="quotes" style="margin-top:24px">
+      <div class="quote"><div class="stars">★★★★★</div><p>Замовляю втретє, беру набір на всю родину. Гострий — улюблений.</p><div class="who">Олег, Київ</div></div>
+      <div class="quote"><div class="stars">★★★★★</div><p>Брала в дорогу — зручно, не кришиться, реально смачно. Єдине, довго чекала відповіді менеджера.</p><div class="who">Ірина, Дніпро</div></div>
+      <div class="quote"><div class="stars">★★★★☆</div><p>Нормальний продукт за свої гроші. Хотілося б бачити фасування більше 50 г.</p><div class="who">Максим, Львів</div></div>
+    </div>
+    <p style="color:var(--muted);font-size:14px;margin-top:18px">Понад 1200 виконаних замовлень з 2019 року.</p>
+  </div>
+</section>
+
+<footer id="contacts">
+  <div class="wrap foot-grid">
+    <div>
+      <div class="logo" style="color:#fff">🔥 ДИМАР<span style="color:#f0c9a8">.</span></div>
+      <p style="margin-top:12px;max-width:38ch">Родинна майстерня в'яленого м'яса. Львів, Україна.</p>
+    </div>
+    <div>
+      <h4>Контакти</h4>
+      <ul>
+        <li>+38 (0XX) XXX-XX-XX</li>
+        <li><a href="#order">hello@dymar.example</a></li>
+        <li>Пн–Пт, 10:00–18:00</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Розділи</h4>
+      <ul>
+        <li><a href="#about">Про нас</a></li>
+        <li><a href="#price">Вартість</a></li>
+        <li><a href="#delivery">Доставка та оплата</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap" style="margin-top:34px;opacity:.6;font-size:13px">
+    © 2026 Димар. Навчальний макет для курсу Digital Marketing + AI. Бренд вигаданий.
+  </div>
+</footer>
+
+<!-- Попап -->
+<div class="modal" id="promo">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('promo').classList.remove('open')">✕</button>
+    <h3>−10% на перше замовлення</h3>
+    <p style="color:var(--muted)">Залиште e-mail і отримайте промокод на першу покупку.</p>
+    <input type="email" placeholder="ваш@email.com" style="margin:14px 0">
+    <button class="btn btn--primary" style="width:100%" onclick="document.getElementById('promo').classList.remove('open')">Отримати знижку</button>
+    <p style="font-size:12px;color:#b3a596;margin:12px 0 0">Натискаючи кнопку, ви погоджуєтесь на розсилку.</p>
+  </div>
+</div>
+
+<script>
+  setTimeout(function(){ document.getElementById('promo').classList.add('open'); }, 7000);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') document.getElementById('promo').classList.remove('open');
+  });
+</script>
+
+</body>
+</html>
